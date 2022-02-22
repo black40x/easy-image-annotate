@@ -107,6 +107,7 @@ import { addProj, createProj, createStyle } from 'vuelayers/lib/ol-ext'
 import MultiPoint from 'ol/geom/MultiPoint'
 import { createBox } from 'ol/interaction/Draw'
 import { mapState } from 'vuex'
+import { LineString, Polygon, Point, Circle } from 'ol/geom'
 
 export default {
   name: 'AnnotationEditor',
@@ -288,18 +289,16 @@ export default {
             imageRadius: 3,
             fillColor: color,
             geom: (feature) => {
-              const cl = feature.getGeometry().constructor.name
-              switch (cl) {
-                case 'Point':
-                case 'Circle':
-                  return null
-                case 'LineString':
-                  return new MultiPoint(feature.getGeometry().getCoordinates())
-                case 'Polygon':
-                  return new MultiPoint(feature.getGeometry().getCoordinates()[0])
-                default:
-                  return null
+              if (feature.getGeometry() instanceof Point || feature.getGeometry() instanceof Circle) {
+                return null
               }
+              if (feature.getGeometry() instanceof LineString) {
+                return new MultiPoint(feature.getGeometry().getCoordinates())
+              }
+              if (feature.getGeometry() instanceof Polygon) {
+                return new MultiPoint(feature.getGeometry().getCoordinates()[0])
+              }
+              return null
             }
           })
         ]

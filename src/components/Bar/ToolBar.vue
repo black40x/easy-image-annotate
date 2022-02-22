@@ -86,8 +86,9 @@
 
 <script>
 import { mapState } from 'vuex'
-
 import ListItem from '@/components/Bar/ListItem'
+import { LineString, Polygon, Point, Circle } from 'ol/geom'
+
 export default {
   name: 'ToolBar',
   components: { ListItem },
@@ -171,37 +172,44 @@ export default {
 
       const featureToCoords = feature => {
         const img = feature.getProperties().image
-        const coord = feature.getGeometry().getCoordinates()
+        const geometry = feature.getGeometry()
+        const coord = geometry.getCoordinates()
 
-        switch (feature.getGeometry().constructor.name) {
-          case 'LineString':
-            return {
-              coordinates: coord.map(point => {
-                return [point[0] / img.width, (img.height - point[1]) / img.height]
-              }),
-              bbox: extentToBbox(feature.getGeometry().computeExtent(), img)
-            }
-          case 'Polygon':
-            return {
-              coordinates: coord[0].map(point => {
-                return [point[0] / img.width, (img.height - point[1]) / img.height]
-              }),
-              bbox: extentToBbox(feature.getGeometry().computeExtent(), img)
-            }
-          case 'Point':
-            return {
-              coordinates: [coord[0] / img.width, (img.height - coord[1]) / img.height]
-            }
-          case 'Circle':
-            // eslint-disable-next-line no-case-declarations
-            const center = feature.getGeometry().getCenter()
-            // eslint-disable-next-line no-case-declarations
-            const radius = feature.getGeometry().getRadius()
-            return {
-              center: [center[0] / img.width, (img.height - center[1]) / img.height],
-              radius: radius / img.width,
-              bbox: extentToBbox(feature.getGeometry().computeExtent(), img)
-            }
+        if (geometry instanceof LineString) {
+          return {
+            type: 'Line',
+            coordinates: coord.map(point => {
+              return [point[0] / img.width, (img.height - point[1]) / img.height]
+            }),
+            bbox: extentToBbox(geometry.computeExtent(), img)
+          }
+        }
+        if (geometry instanceof Polygon) {
+          return {
+            type: 'Polygon',
+            coordinates: coord[0].map(point => {
+              return [point[0] / img.width, (img.height - point[1]) / img.height]
+            }),
+            bbox: extentToBbox(geometry.computeExtent(), img)
+          }
+        }
+        if (geometry instanceof Point) {
+          return {
+            type: 'Point',
+            coordinates: [coord[0] / img.width, (img.height - coord[1]) / img.height]
+          }
+        }
+        if (geometry instanceof Circle) {
+          // eslint-disable-next-line no-case-declarations
+          const center = geometry.getCenter()
+          // eslint-disable-next-line no-case-declarations
+          const radius = geometry.getRadius()
+          return {
+            type: 'Circle',
+            center: [center[0] / img.width, (img.height - center[1]) / img.height],
+            radius: radius / img.width,
+            bbox: extentToBbox(geometry.computeExtent(), img)
+          }
         }
       }
 
@@ -217,7 +225,6 @@ export default {
             const clid = this.classes.findIndex(cl => cl.name === feature.getProperties().class.name)
             return {
               class_id: clid,
-              type: feature.getGeometry().constructor.name,
               geometry: featureToCoords(feature)
             }
           })
