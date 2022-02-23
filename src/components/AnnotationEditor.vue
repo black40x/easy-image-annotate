@@ -265,19 +265,21 @@ export default {
           color = this.currentClass.color
         }
 
+        let strokeWidth = 0.8
         let opacity = 0.3
 
         if (feature.getProperties().class && feature.getProperties().class.color) {
           color = feature.getProperties().class.color
           if (this.selectedAnnotate === feature.getProperties().class.id) {
             opacity = 0.5
+            strokeWidth = 2
           }
         }
 
         const style = [
           createStyle({
             strokeColor: color,
-            strokeWidth: 1,
+            strokeWidth: strokeWidth,
             imageColor: [255, 255, 255, 0.5],
             imageRadius: 10,
             fillColor: [...this.hexToRgb(color), opacity]

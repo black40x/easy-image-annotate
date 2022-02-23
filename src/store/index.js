@@ -94,7 +94,13 @@ export default new Vuex.Store({
       localStorage.setItem('classes', JSON.stringify(state.classes))
     },
     renameClass (state, payload) {
-      //
+      state.currentAnnotations.forEach(annotate => {
+        if (annotate.class.name === state.classes[payload.id].name) {
+          annotate.class.name = payload.name
+        }
+      })
+      state.classes[payload.id].name = payload.name
+      localStorage.setItem('classes', JSON.stringify(state.classes))
     }
   }
 })

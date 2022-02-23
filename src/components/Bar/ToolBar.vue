@@ -44,6 +44,7 @@
           :color="cl.color"
           :active="activeClass === id"
           @click="handleClassSelect(id)"
+          @dblclick="handleClassRename(id)"
           @remove="handleClassRemove(id)"
         />
       </div>
@@ -139,6 +140,17 @@ export default {
       if (confirm('Remove this file?')) {
         this.$store.commit('removeFile', id)
       }
+    },
+    handleClassRename (id) {
+      const name = prompt(
+        'Enter new class name:',
+        this.classes[id].name
+      )
+
+      this.$store.commit('renameClass', {
+        id: id,
+        name: name
+      })
     },
     handleClassSelect (id) {
       this.$store.commit('setActiveClass', id)

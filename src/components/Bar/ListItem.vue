@@ -1,5 +1,9 @@
 <template>
-  <div :class="{'list-item': true, 'list-item--active': active}" @click="handleClick">
+  <div
+    :class="{'list-item': true, 'list-item--active': active}"
+    @click="handleClick"
+    @dblclick="handleDblClick"
+  >
     <div class="list-item__inner">
       <span
         v-if="color"
@@ -31,6 +35,9 @@ export default {
   methods: {
     handleClick () {
       this.$emit('click')
+    },
+    handleDblClick () {
+      this.$emit('dblclick')
     },
     handleRemove (e) {
       e.stopPropagation()
