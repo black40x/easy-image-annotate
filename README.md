@@ -1,5 +1,9 @@
 # image-markup
 
+Simple image annotation.
+
+[Demo](https://black40x.github.io/easy-image-annotate/)
+
 ## Project setup
 ```
 npm install
