@@ -35,9 +35,9 @@ export default new Vuex.Store({
   },
   mutations: {
     setActiveFile (state, payload) {
-      state.activeFile = payload
-      state.currentAnnotations = mapFeatures(state.annotations[state.activeFile])
+      state.currentAnnotations = mapFeatures(state.annotations[payload])
       state.selectedAnnotate = null
+      state.activeFile = payload
     },
     setActiveClass (state, payload) {
       state.activeClass = payload

@@ -1,6 +1,7 @@
 <template>
   <div ref="annotate" class="annotation">
     <drag-and-drop-files
+      ref="fileSelector"
       @change="updateFiles"
       @drag-over="changeDragOver"
     />
@@ -13,7 +14,7 @@
       class="annotation__empty"
     >
       <span>🤖</span><br />
-      Drop me images to learn...
+      <span class="sel-files" @click="selectImages">Select images...</span> Or drop it here to annotate...
     </div>
   </div>
 </template>
@@ -50,6 +51,9 @@ export default {
         }
       }
     },
+    selectImages () {
+      this.$refs.fileSelector.select()
+    },
     changeDragOver (dragOver) {
       this.dragOver = dragOver
     }
@@ -67,7 +71,7 @@ export default {
   color: #FFF;
 
   &__empty {
-    pointer-events: none;
+    // pointer-events: none;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -79,6 +83,16 @@ export default {
 
     span {
       font-size: 7rem;
+    }
+
+    .sel-files {
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 1.5rem;
+
+      &:hover {
+        text-decoration: none;
+      }
     }
   }
 }

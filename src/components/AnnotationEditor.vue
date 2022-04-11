@@ -66,7 +66,7 @@
       <vl-view
         :projection="editor.projection.getCode()"
         :center="editor.center"
-        :zoom="2"
+        :zoom="editor.zoom"
       />
       <vl-layer-image
         id="xkcd"
@@ -146,6 +146,7 @@ export default {
     },
     activeFile () {
       this.editor.ready = false
+      this.editor.zoom = 2
       if (this.activeFile !== null) {
         this.$nextTick(() => {
           this.loadImageFile(this.files[this.activeFile])
@@ -174,6 +175,7 @@ export default {
         ready: false,
         center: [0, 0],
         size: [0, 0],
+        zoom: 2,
         extent: {},
         projection: null,
         image: null

@@ -61,6 +61,9 @@ export default {
       this.$refs.file.files = event.dataTransfer.files
       this.onChange()
       this.isDragOver = false
+    },
+    select () {
+      this.$refs.file.click()
     }
   },
   destroyed () {
